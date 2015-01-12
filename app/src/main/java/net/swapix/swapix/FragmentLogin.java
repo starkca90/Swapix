@@ -1,13 +1,9 @@
 package net.swapix.swapix;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import net.swapix.oauth.Constants;
 import net.swapix.oauth.OAuthAccessTokenActivity;
@@ -26,19 +22,27 @@ public class FragmentLogin extends Fragment {
 //    private final String REFRESH_TOKEN = "refresh_token";
 //    private String clientId = "ERROR";
 //    private String clientSecret = "ERROR";
-    private OnLoginListener listener;
 
 //    private EditText etUName;
 //    private EditText etPass;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView");
+    public void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "onCreate");
 
         startOauthFlow(Oauth2Params.SWAPIX_OAUTH);
+    }
 
-        View view = inflater.inflate(R.layout.fragment_login, container, false);
+    /**
+     * Starts the activity that takes care of the OAuth2 flow
+     *
+     * @param oauth2Params
+     */
+    private void startOauthFlow(Oauth2Params oauth2Params) {
+        Constants.OAUTH2PARAMS = oauth2Params;
+        startActivity(new Intent().setClass(this.getActivity(), OAuthAccessTokenActivity.class));
+    }
+
 /*
         clientId = ApplicationController.getInstance().getClientID();
 		clientSecret = ApplicationController.getInstance().getClientSecret();
@@ -127,34 +131,4 @@ public class FragmentLogin extends Fragment {
 			}
 
 		});*/
-
-        return view;
-    }
-
-    /**
-     * Starts the activity that takes care of the OAuth2 flow
-     *
-     * @param oauth2Params
-     */
-    private void startOauthFlow(Oauth2Params oauth2Params) {
-        Constants.OAUTH2PARAMS = oauth2Params;
-        startActivity(new Intent().setClass(this.getActivity(), OAuthAccessTokenActivity.class));
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof OnLoginListener) {
-            listener = (OnLoginListener) activity;
-        } else {
-            throw new ClassCastException(activity.toString()
-                    + " must implement FragmentLogin.OnLoginListener");
-        }
-    }
-
-    public interface OnLoginListener {
-        public void onLoginSuccess();
-
-        public void onLoginFail();
-    }
 }
