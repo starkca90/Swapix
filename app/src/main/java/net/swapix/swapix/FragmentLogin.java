@@ -29,6 +29,7 @@ public class FragmentLogin extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate");
+        super.onCreate(savedInstanceState);
 
         startOauthFlow(Oauth2Params.SWAPIX_OAUTH);
     }
